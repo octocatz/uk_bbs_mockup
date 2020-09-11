@@ -10,6 +10,7 @@ final dummySnapshot = [
   {"name": "Ike", "votes": 10},
   {"name": "Justin", "votes": 1},
 ];
+final databaseReference = Firestore.instance;
 
 class MyApp extends StatelessWidget {
   @override
@@ -32,7 +33,31 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Baby Name Votes')),
+      appBar: AppBar(
+        title: Text('Baby Name Votes'),
+        leading: GestureDetector(
+          onTap: () {/* Write listener code here */},
+          child: Icon(
+            Icons.menu, // add custom icons also
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  _createRecord();
+                },
+                child: Icon(Icons.add_box, size: 26.0),
+              )),
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(Icons.more_vert),
+              )),
+        ],
+      ),
       body: _buildBody(context),
     );
   }
@@ -74,6 +99,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+void _createRecord() async {
+  await databaseReference.collection("books").document("1").setData({
+    'title': 'Mastering Flutter',
+    'description': 'Programming Guide for Dart'
+  });
+
+  DocumentReference ref = await databaseReference.collection("books").add({
+    'title': 'Flutter in Action',
+    'description': 'Complete Programming Guide to learn Flutter'
+  });
+  print(ref.documentID);
 }
 
 class Record {
